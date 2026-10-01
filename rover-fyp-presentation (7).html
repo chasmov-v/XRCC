@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Modular Smart Electric Rover</title>
+<style>
+:root{--bg:#0E141B;--pn:#161F29;--ln:#26333F;--am:#F2A65A;--tl:#4FBDAE;--tx:#E9EEF2;--mu:#8FA0AD;--mono:'JetBrains Mono',monospace;--sans:'Inter',system-ui,sans-serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root:not([data-theme=light]){color-scheme:dark}
+*{box-sizing:inherit}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--tx);font-family:var(--sans);background-image:linear-gradient(var(--ln) 1px,transparent 1px),linear-gradient(90deg,var(--ln) 1px,transparent 1px);background-size:48px 48px;background-position:center}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;padding:clamp(20px,5vw,56px) clamp(20px,8vw,110px) 80px;overflow-y:auto}
+.slide.active{display:flex}
+.active>*{animation:in .5s both}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.active>*{animation:none!important}}
+.tag{font:13px var(--mono);color:var(--am);margin-bottom:8px}
+h1{font-size:clamp(24px,3.6vw,40px);margin:0 0 14px;line-height:1.12;max-width:22ch}
+h2{font-size:18px;color:var(--tl);margin:14px 0 6px}
+p{color:var(--mu);max-width:72ch;line-height:1.55;font-size:15.5px;margin:4px 0}
+ul{margin:4px 0;padding-left:20px;max-width:74ch}
+li{line-height:1.55;margin-bottom:6px;font-size:15px}
+b{color:var(--am);font-weight:600}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+@media(max-width:720px){.g{grid-template-columns:1fr}}
+.c{background:var(--pn);border:1px solid var(--ln);border-radius:10px;padding:14px 16px}
+.c h3{margin:0 0 5px;font-size:14.5px;color:var(--tl)}.c p{font-size:13.5px;margin:0}
+.qa{border-left:2px solid var(--tl);padding-left:14px;margin-bottom:12px;max-width:80ch}
+.q{font-weight:600;font-size:15px}.a{color:var(--mu);font-size:14px;margin-top:3px;line-height:1.5}
+table{border-collapse:collapse;max-width:640px;width:100%;font-size:14.5px}
+td{padding:6px 10px;border-bottom:1px solid var(--ln)}td+td{text-align:right;font-family:var(--mono);color:var(--am)}
+tr.t td{font-weight:700;color:var(--tx)}tr.t td+td{color:var(--tl)}
+.toc{columns:2;column-gap:32px;max-width:820px;padding:0;list-style:none}
+.toc li{break-inside:avoid;cursor:pointer;font-size:14.5px}.toc span{font-family:var(--mono);color:var(--am);display:inline-block;width:34px}
+@media(max-width:720px){.toc{columns:1}}
+.title{justify-content:center;align-items:flex-start;overflow:hidden}
+.active>.bg{position:absolute;inset:0;width:100%;height:100%;animation:none;z-index:0;pointer-events:none}
+.title>*:not(.bg){position:relative;z-index:1}
+.title:after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 35% 50%,rgba(14,20,27,.85),rgba(14,20,27,.25) 70%);pointer-events:none}
+.big{font:700 clamp(84px,19vw,230px)/.95 var(--mono);letter-spacing:.04em;margin:0;text-shadow:5px 0 rgba(242,166,90,.55),-5px 0 rgba(79,189,174,.45)}
+.quote{color:var(--mu);opacity:.55;font-style:italic;font-size:clamp(13px,1.6vw,17px);max-width:52ch;margin:14px 0 0;line-height:1.5}
+.quote small{display:block;font-style:normal;font-family:var(--mono);margin-top:4px;font-size:12px}
+.mem{display:flex;flex-wrap:wrap;gap:10px;margin-top:34px;max-width:720px}
+.mem span{font:600 15px var(--mono);padding:8px 16px;border-radius:14px;border:1px solid currentColor;background:rgba(14,20,27,.7)}
+.mem .g1{color:#5BD68A}.mem .r1{color:#E5635B}
+.mem i{display:block;font-style:normal;opacity:.8;margin-top:2px;font-size:12px}
+.dr{stroke-dasharray:1;stroke-dashoffset:1;animation:dr 9s ease-in-out infinite alternate!important}
+@keyframes dr{to{stroke-dashoffset:0}}
+.nd{transform-box:fill-box;transform-origin:center;animation:wob 7s ease-in-out infinite alternate!important}
+@keyframes wob{from{transform:rotate(-70deg)}to{transform:rotate(150deg)}}
+.gr{transform-box:fill-box;transform-origin:center;animation:spin 60s linear infinite!important}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.dr,.nd,.gr{animation:none!important;stroke-dashoffset:0}}
+.flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:8px;margin-top:10px}.flow .c{flex:1 1 130px}.flow .ar2{align-self:center;color:var(--am);font:20px var(--mono)}
+.gantt{display:grid;grid-template-columns:150px repeat(4,1fr);gap:6px 4px;margin-top:16px;max-width:760px;font-size:13px}
+.gantt>div{padding:4px 2px}.gantt .h{font:12px var(--mono);color:var(--mu);text-align:center}.gantt .b{border-radius:6px;background:var(--tl);color:#0E141B;font-weight:600;text-align:center;padding:5px 2px}.gantt .b.a{background:var(--am)}
+.stand{justify-content:center;align-items:center;text-align:center}.stand .big2{font:600 clamp(26px,5vw,56px) var(--mono);color:var(--tl)}.stand .big2:after{content:"_";animation:bl 1s steps(1) infinite}
+@keyframes bl{50%{opacity:0}}.sp{width:64px;height:64px;border:5px solid var(--ln);border-top-color:var(--am);border-radius:50%;margin:30px auto 0;animation:rot 1s linear infinite!important}@keyframes rot{to{transform:rotate(360deg)}}
+.qr{width:200px;height:200px;margin:26px auto 0;border:2px dashed var(--ln);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--mu);font:13px var(--mono)}
+.pb{width:min(420px,80%);height:6px;border:1px solid var(--ln);border-radius:4px;margin:26px auto 0;overflow:hidden}.pb i{display:block;height:100%;background:var(--am);width:0;animation:pg 6s ease-in-out infinite!important}
+@keyframes pg{to{width:100%}}
+.ft button{background:none;border:1px solid var(--ln);border-radius:999px;color:var(--am);font:12px var(--mono);padding:4px 12px;cursor:pointer}.ft button:hover{border-color:var(--am)}
+.ft{margin-top:auto;padding-top:18px;font:12px var(--mono);color:var(--mu);display:flex;justify-content:space-between}
+.nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:6px;flex-wrap:wrap;padding:12px 14px calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,var(--bg) 45%);z-index:9}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ln);border:0;padding:0;cursor:pointer}.dot.on{background:var(--am)}
+.ar{background:var(--pn);border:1px solid var(--ln);color:var(--tx);width:34px;height:34px;border-radius:50%;cursor:pointer}
+:focus-visible{outline:2px solid var(--am);outline-offset:2px}
+</style></head><body>
+<div id="deck">
+
+<section class="slide active title" data-t="Title"><svg class="bg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true" fill="none" stroke-linecap="round">
+<g stroke="#F2A65A" opacity=".28"><path class="gr" d="M335.0 610.0L374.4 622.6L333.4 628.2L328.7 645.9L361.4 671.3L320.9 662.5L310.4 677.5L332.5 712.5L297.5 690.4L282.5 700.9L291.3 741.4L265.9 708.7L248.2 713.4L242.6 754.4L230.0 715.0L211.8 713.4L192.5 750.1L194.1 708.7L177.5 700.9L146.8 728.8L162.5 690.4L149.6 677.5L111.2 693.2L139.1 662.5L131.3 645.9L89.9 647.5L126.6 628.2L125.0 610.0L85.6 597.4L126.6 591.8L131.3 574.1L98.6 548.7L139.1 557.5L149.6 542.5L127.5 507.5L162.5 529.6L177.5 519.1L168.7 478.6L194.1 511.3L211.8 506.6L217.4 465.6L230.0 505.0L248.2 506.6L267.5 469.9L265.9 511.3L282.5 519.1L313.2 491.2L297.5 529.6L310.4 542.5L348.8 526.8L320.9 557.5L328.7 574.1L370.1 572.5L333.4 591.8Z" stroke-width="3" stroke-linejoin="miter"/><circle cx="230" cy="610" r="70" stroke-width="1.5"/><path d="M130 610h200M230 510v200" stroke-width="1" stroke-dasharray="6 5"/></g>
+<g stroke="#4FBDAE" opacity=".25"><path class="gr" d="M1230.0 140.0L1279.5 154.3L1228.5 161.3L1223.9 182.3L1267.4 209.9L1216.4 202.3L1206.2 221.1L1240.1 259.9L1193.4 238.2L1178.2 253.4L1199.9 300.1L1161.1 266.2L1142.3 276.4L1149.9 327.4L1122.3 283.9L1101.3 288.5L1094.3 339.5L1080.0 290.0L1058.7 288.5L1037.5 335.4L1037.7 283.9L1017.7 276.4L984.2 315.5L998.9 266.2L981.8 253.4L938.6 281.4L966.6 238.2L953.8 221.1L904.5 235.8L943.6 202.3L936.1 182.3L884.6 182.5L931.5 161.3L930.0 140.0L880.5 125.7L931.5 118.7L936.1 97.7L892.6 70.1L943.6 77.7L953.8 58.9L919.9 20.1L966.6 41.8L981.8 26.6L960.1 -20.1L998.9 13.8L1017.7 3.6L1010.1 -47.4L1037.7 -3.9L1058.7 -8.5L1065.7 -59.5L1080.0 -10.0L1101.3 -8.5L1122.5 -55.4L1122.3 -3.9L1142.3 3.6L1175.8 -35.5L1161.1 13.8L1178.2 26.6L1221.4 -1.4L1193.4 41.8L1206.2 58.9L1255.5 44.2L1216.4 77.7L1223.9 97.7L1275.4 97.5L1228.5 118.7Z" stroke-width="3" stroke-linejoin="miter" style="animation-direction:reverse"/><circle cx="1080" cy="140" r="110" stroke-width="1.5"/><circle cx="1080" cy="140" r="14" stroke-width="2"/></g>
+<path class="dr" pathLength="1" d="M70 740C190 640 300 760 420 680S610 560 540 470S380 470 450 370S660 330 720 420S650 520 760 560S940 500 900 400" stroke="#E9EEF2" stroke-width="2" opacity=".35"/>
+<text x="905" y="395" font-size="60" fill="#E9EEF2" opacity=".3" font-family="monospace">?</text>
+<g stroke="#8FA0AD" opacity=".5" stroke-width="1.2"><path d="M90 70h420M90 60v20M510 60v20M100 70l12-5v10zM500 70l-12-5v10z"/><path d="M60 140v300M50 140h20M50 440h20"/></g>
+<g fill="#8FA0AD" opacity=".55" font-family="monospace" font-size="14"><text x="250" y="62">300 mm</text><text x="18" y="300" transform="rotate(-90 18 300)">200 mm</text><text x="840" y="760">NOT TO SCALE</text><text x="840" y="780">SHEET 1 OF ?</text><text x="520" y="250">REV ? / TODO</text><text x="60" y="770">x=?  y=?  z=?</text></g>
+<g stroke="#8FA0AD" opacity=".3" stroke-width="1"><path d="M600 140l140 90M600 140l30 150M600 140h190"/><path d="M660 140a60 60 0 0 1 14 34" stroke-dasharray="3 3"/></g>
+<g fill="#E9EEF2" opacity=".14" font-family="monospace"><text x="760" y="640" font-size="90">?</text><text x="470" y="760" font-size="48">?</text><text x="1010" y="520" font-size="64">?</text><text x="150" y="220" font-size="56">?</text></g>
+<g transform="translate(1000 640)"><circle r="70" stroke="#8FA0AD" stroke-width="1.5" opacity=".45"/><circle r="60" stroke="#8FA0AD" stroke-dasharray="2 6" opacity=".35"/><g class="nd"><path d="M0-58L8 0H-8z" fill="#E5635B" opacity=".6"/><path d="M0 58L8 0H-8z" fill="#8FA0AD" opacity=".4"/></g><circle r="4" fill="#E9EEF2" opacity=".5"/></g>
+<g stroke="#F2A65A" opacity=".5" stroke-width="1.5"><path d="M520 90l16 16M536 90l-16 16"/><path d="M1150 720l16 16M1166 720l-16 16"/></g></svg>
+<h1 class="big" style="max-width:none">XRCC</h1>
+<p class="quote">"Scientists discover the world that exists; engineers create the world that never was."<small>— Theodore von Kármán</small></p>
+<div class="mem"><span class="g1">Mir Buland Khan<i>F24BScMET025</i></span><span class="r1">Aashir Rehman<i>F24BScMET015</i></span><span class="r1">Ubaid Ullah<i>F24BScMET008</i></span><span class="g1">Abdullah Azzam<i>F24BScMET014</i></span><span class="r1">Arham Ali Abbasi<i>F24BScMET023</i></span></div></section>
+
+<section class="slide" data-t="Preface: what is this project?"><div class="tag">PREFACE</div><h1>What is this project, in one minute?</h1>
+<p>A <b>modular, upgradable RC-style rover</b>: a small four-wheel car that we build in stages, starting as a basic remote-controlled vehicle and growing from there.</p>
+<ul><li><b>Its main idea:</b> the battery is a removable cartridge. Instead of stopping to recharge, the rover swaps in a fresh one and a station charges the old one.</li>
+<li><b>How it stays cheap:</b> a few motors are shared between driving and the swap mechanisms, within a student budget of about PKR 25,000.</li>
+<li><b>Where it goes next:</b> sensors, then remote control over Wi-Fi, then autonomous driving, and further upgrades if time allows.</li>
+<li><b>Why it matters:</b> it is a small-scale version of what NIO and Lahore's Zyp and NeuBolt do for cars, bikes and rickshaws.</li></ul></section>
+
+<section class="slide" data-t="Contents"><div class="tag">CONTENTS</div><h1>Contents</h1><ul class="toc" id="toc"></ul></section>
+
+<section class="slide" data-t="Background / Introduction"><div class="tag">BACKGROUND</div><h1>Mobile robots meet the EV energy problem</h1><ul><li><b>Area:</b> small electric mobile robots and the way they store and replace energy.</li><li><b>Why it matters:</b> every robot or EV that recharges in place is out of service while it charges.</li><li><b>Existing technology:</b> NIO's automated car battery swap stations; in Lahore, Zyp (motorcycles) and NeuBolt (rickshaws) do swapping for bikes and three-wheelers.</li><li><b>Our motivation:</b> test whether a small, low-cost rover can do the swap itself, as a hands-on learning project.</li></ul><p>(Diagram: swap-station concept sketch to be shown on CAD.)</p></section>
+
+<section class="slide" data-t="The problem"><div class="tag">THE PROBLEM</div><h1>Fixed batteries force a trade-off small rovers shouldn't have to make</h1>
+<ul><li>A fixed pack means <b>every recharge is downtime</b>: hours out of service.</li>
+<li>Sizing for long runtime means <b>carrying dead weight</b>; sizing small means constant stops.</li>
+<li>One onboard pack is a <b>single point of failure</b>.</li>
+<li>Our goal: show, on a student budget, the principle full-size EVs use: make the energy store <b>modular and swappable</b>.</li></ul></section>
+
+<section class="slide" data-t="Problem statement and aim"><div class="tag">PROBLEM STATEMENT &amp; AIM</div><h1>Problem statement and aim</h1><p>The existing small rovers with fixed batteries have the limitation of long recharge downtime and a single pack as a point of failure, resulting in interrupted operation and oversized, heavy packs. Therefore, there is a need to develop a rover that swaps its own battery cartridges at a charging station.</p><h2>Aim</h2><p>To design and build a low-cost modular rover that exchanges its battery cartridges automatically, showing hot-swappable energy storage at small scale.</p></section>
+
+<section class="slide" data-t="Objectives"><div class="tag">OBJECTIVES</div><h1>Objectives</h1><ul><li><b>1.</b> Build a 4WD rover on a 300 × 200 mm chassis.</li><li><b>2.</b> Design a removable battery cartridge and a swap mechanism with shared motors.</li><li><b>3.</b> Build a passive charging station with a self-aligning dock.</li><li><b>4.</b> Add sensors, remote control and, if possible, autonomous docking.</li><li><b>5.</b> Complete the project within PKR 25,000 ± 3,000 in about 4 months.</li></ul></section>
+
+<section class="slide" data-t="Concept: five motors, nine jobs"><div class="tag">THE CONCEPT</div><h1>One rover, five motors, nine jobs</h1>
+<p>When the rover stops to swap, its four drive motors sit idle. A 5th motor slides all four backward, disengaging them from the wheels, and hands their power to swap mechanisms. Spring preload brakes the wheels automatically during the same slide.</p>
+<div class="g"><div class="c"><h3>Drive (4 jobs)</h3><p>4WD, gear-coupled wheels, sliding motor mounts. With an H-bridge between the motors and the Arduino, we can drive them in both directions.</p></div>
+<div class="c"><h3>Clamp</h3><p>Worm-gear reduction: self-locking, holds the cartridge with zero standing current.</p></div>
+<div class="c"><h3>Carousel</h3><p>Two positions only (left / right), spring detents, microswitch confirms seating.</p></div>
+<div class="c"><h3>Insertion + station turn</h3><p>Screw-push plus cam-drop; external gear turns the station carousel.</p></div>
+<div class="c"><h3>Camera rotation (9th job)</h3><p>The same shared drive rotates the camera to look where the rover needs to see.</p></div></div></section>
+
+<section class="slide" data-t="Working principle and methodology"><div class="tag">WORKING PRINCIPLE</div><h1>Input → Process → Output</h1><div class="flow"><div class="c"><h3>Input</h3><p>Battery low (voltage, current, temperature) or manual trigger</p></div><div class="ar2">→</div><div class="c"><h3>Dock</h3><p>Rover drives to the station; funnel and bump align it</p></div><div class="ar2">→</div><div class="c"><h3>Disengage</h3><p>5th motor slides drive motors back; springs brake wheels</p></div><div class="ar2">→</div><div class="c"><h3>Swap</h3><p>Clamp, carousel and insertion exchange the cartridge</p></div><div class="ar2">→</div><div class="c"><h3>Output</h3><p>Fresh battery live; rover resumes driving</p></div></div><h2>Development stages</h2><ul><li>CAD in Onshape, then 3D-printing and assembly, then Arduino/ESP32 control, then testing.</li></ul></section>
+
+<section class="slide" data-t="Drivetrain and sizing"><div class="tag">DRIVETRAIN</div><h1>Drivetrain: preliminary sizing, work in progress</h1>
+<p>We are only in week 1. Every number below is a first estimate to be revised as parts are chosen, weighed and tested.</p>
+<ul><li><b>Chassis 300 × 200 mm</b>, wheels 80 mm, target mass 2–4 kg.</li>
+<li>Rough worst case (assumed 4 kg, ~15° docking ramp): on the order of <b>1 kgf·cm per wheel</b>. Real mass and ramp angle are still unknown.</li>
+<li>Current leaning: TT-style gearmotors around <b>1:100–1:150</b>, plastic gearbox (short duty cycle). Not final.</li>
+<li>Starting layout: track ≈165 mm, wheelbase ≈150 mm, so near 1:1 to keep skid-steer turning scrub low. May change with the real motor and wheel dimensions.</li>
+<li>All four motors identical: a DC motor already trades speed for torque under load.</li>
+<li>Planned: stall guard in software (cut PWM if current stays high for 1–2 s).</li>
+<li><b>Status: work in progress.</b> Torque, speed, mass and layout will be refined by testing.</li></ul></section>
+
+<section class="slide" data-t="Preliminary specifications"><div class="tag">PRELIMINARY SPECIFICATIONS</div><h1>Specs (preliminary, will be refined)</h1><ul><li><b>Dimensions:</b> chassis 300 × 200 mm; wheels 80 mm.</li><li><b>Material:</b> mostly plastic / 3D-printed parts.</li><li><b>Power:</b> 2S Li-ion cartridges, ~7.4 V, ~2,500 mAh each; 5 V logic via buck converter.</li><li><b>Capacity:</b> 2 cartridges, estimated ~1.4 h each.</li><li><b>Operating range:</b> indoor flat floor; teleoperation range depends on Wi-Fi (to be tested).</li><li><b>Control:</b> ESP32 with H-bridge motor drivers.</li><li><b>Major components:</b> 5 gearmotors, cartridges, station, sensors, cameras.</li><li><b>Target performance:</b> total mass 2–4 kg; swap about 20 s.</li></ul></section>
+
+<section class="slide" data-t="Swap mechanism"><div class="tag">SWAP MECHANISM</div><h1>Mostly electrical, with one small moving shaft</h1>
+<ul><li>The swap is <b>primarily an electrical handover</b> between two cartridges (next slide).</li>
+<li>The mechanical part is simple: <b>one shaft that shifts slightly sideways</b>, carrying 2–3 gears (<b>one input, two outputs</b>).</li>
+<li>Shifting the shaft selects which output the single motor drives, so <b>one motor does two jobs</b> with no clutch complexity.</li>
+<li>Carousel: left/right detents. Clamp: worm gear. Insertion: screw stroke then cam-drop.</li>
+<li>Swap takes about <b>20 seconds</b>; demo can trigger it manually rather than waiting for depletion.</li></ul></section>
+
+<section class="slide" data-t="Power and safety"><div class="tag">POWER &amp; SAFETY</div><h1>Seamless handover, designed against failure cases</h1>
+<ul><li><b>Two cartridges</b>, each 2 × 18650 (2S, ~2,500 mAh) with its own 2S protection board and thermistor, in a rigid housing.</li>
+<li><b>Diode-OR handover</b>: contacts are spaced so only 1–2 lines connect at once; the higher-voltage pack supplies the load, with no cross-current.</li>
+<li><b>One buck converter</b> gives the ESP32 a steady 5 V, so voltage dips during the swap never reach it.</li>
+<li>TB6612 motor drivers (lower drop than L298N) straight off the raw rail.</li>
+<li>Runtime ≈ 1.4 h per cartridge, so ~2.9 h across both, before recharge.</li></ul></section>
+
+<section class="slide" data-t="Charging station and docking"><div class="tag">STATION &amp; DOCKING</div><h1>A passive station: the rover does the work</h1>
+<ul><li>Station has <b>no motor</b>: the rover's reassigned motor turns its 2-slot carousel through a gear mesh.</li>
+<li>Each slot has its own always-on <b>CC-CV charge module</b> (TP5100-class); charging stops automatically at full.</li>
+<li><b>Self-aligning dock</b>: funnel walls fix left/right and heading; a bump-and-dip under the rear wheels fixes forward/back. Geometry alone, no precision sensing.</li>
+<li>Cameras and teleoperation handle the coarse approach; geometry finishes the last few millimetres.</li>
+<li><b>Alternative, as NIO does it:</b> with a somewhat higher budget, the <b>station could do most of the battery changing</b>, holding the motors and mechanisms itself. That makes the rover lighter and simpler, at the cost of a more expensive station.</li></ul></section>
+
+<section class="slide stand" data-t="Standby: CAD model (Onshape)"><div class="big2">Standby Sequence Initiating...</div><div class="sp"></div></section>
+
+<section class="slide" data-t="Precedent: NIO"><div class="tag">REAL-WORLD PRECEDENT</div><h1>NIO does this with cars</h1>
+<p><b>NIO is a Chinese electric-car company</b> that built a network of Power Swap Stations: a car drives in and its whole battery is exchanged automatically in a few minutes, instead of waiting to charge.</p>
+<ul><li>Drivers never wait for charging; the company manages and charges packs centrally.</li>
+<li>The <b>principle is scale-independent</b>: it works whether the vehicle weighs 2 kg or 2 tonnes.</li>
+<li>NIO swaps from below with a large robotic platform; ours is a <b>horizontal, motor-shared carousel</b>, deliberately leaner for a student budget.</li>
+<li>Our contribution: showing swapping <b>without a dedicated actuator for every function</b>.</li></ul></section>
+
+<section class="slide" data-t="EV bikes and Lahore"><div class="tag">BATTERY SWAPPING FOR BIKES</div><h1>The e-bike strategy, and Lahore's own examples</h1>
+<h2>The strategy</h2>
+<ul><li>Rider owns (or rents) the bike but <b>not the battery</b>; batteries are exchanged at a station in about a minute.</li>
+<li>Upfront bike cost drops, range anxiety disappears, and the operator charges packs cheaply and at scale (even from solar).</li></ul>
+<h2>In Lahore</h2>
+<ul><li><b>Zyp Technologies</b> (Lahore; CEO Hassan Khan): electric motorcycles plus battery swap stations. Raised a $1.2M seed (2023) and $1.5M pre-Series A (2024). Reported status: active, scaling local assembly and rolling out its swap network for commercial riders and delivery fleets.</li>
+<li><b>NeuBolt</b> (LUMS spin-off, founded by Dr. Naveed Arshad): swap stations for electric rickshaws (three-wheelers). Reported status: active, research-backed, running commercial trials and expanding across Punjab; a LUMS-led project targets 137 stations.</li>
+<li>Our project is the same idea, miniaturised and automated.</li></ul></section>
+
+<section class="slide" data-t="Moon base analogy"><div class="tag">WHY IT SCALES</div><h1>A moon-base rover makes the same argument</h1>
+<p>If a rover shuttles within a small, repeatedly visited area, it is cheaper to put the <b>solar panels and charger at one spot</b> than on the rover itself.</p>
+<ul><li>Every kilogram launched to the Moon is expensive; a rover that carries only swappable batteries is lighter.</li>
+<li>One station can serve <b>several light rovers</b> instead of each hauling charging hardware it barely uses.</li>
+<li>This mirrors our design: heavy, stationary hardware at the station; the mobile unit stays simple.</li></ul></section>
+
+<section class="slide" data-t="Economics"><div class="tag">ECONOMICS</div><h1>Where the money is saved, and where it isn't</h1>
+<ul><li><b>Shared motors</b>: reusing the 4 drive motors as swap actuators avoids buying separate motors for several jobs, roughly PKR 2–3k saved.</li>
+<li><b>Passive station</b>: charge modules stay fixed; the rover carries no charger.</li>
+<li><b>Batteries are the big win at fleet scale</b>: one charged spare serves many vehicles, so fewer cells sit idle.</li>
+<li><b>Honest cost</b>: more gears and precision printing, and more single points of failure. We accept that trade knowingly.</li>
+<li>Battery-as-a-service (the Zyp/NIO model) turns a large upfront battery cost into a small per-swap fee.</li></ul></section>
+
+<section class="slide" data-t="Future uses"><div class="tag">FUTURE APPLICATIONS</div><h1>Where this could go</h1>
+<div class="g"><div class="c"><h3>Warehouse / factory AGVs</h3><p>Robots swap batteries at a dock and never stop for charging.</p></div>
+<div class="c"><h3>Campus delivery rovers</h3><p>Short repeated routes with a fixed solar swap station.</p></div>
+<div class="c"><h3>Agriculture and inspection</h3><p>Robots on farms or in plants swap packs at a field station.</p></div>
+<div class="c"><h3>Space and remote bases</h3><p>Lightweight rovers with one fixed solar charging hub.</p></div>
+<div class="c"><h3>Education platform</h3><p>Open-source base for later students to add autonomy.</p></div>
+<div class="c"><h3>Scale-up to bikes</h3><p>Same handover logic applies to e-bike packs.</p></div></div></section>
+
+<section class="slide" data-t="Roadmap"><div class="tag">ROADMAP</div><h1>Staged build within PKR 25,000 ± 3,000</h1>
+<p>Each phase is a working milestone. Later phases happen only if the earlier one works.</p>
+<ul><li><b>Phase 0 (Month 1):</b> basic RC shell, 4WD chassis and manual control.</li>
+<li><b>Phase 1 (Month 1):</b> parts bought, battery swap capability first (cartridges, clamp, carousel, diode-OR).</li>
+<li><b>Phase 2 (Month 2):</b> many sensors: voltage, current, temperature, ultrasonic, IR, cameras.</li>
+<li><b>Phase 3 (Month 3):</b> teleoperation over WiFi or data.</li>
+<li><b>Phase 4 (Month 3):</b> autonomous driving and docking.</li>
+<li><b>Phase 5+ and testing (Month 4):</b> further upgrades if budget and time remain, plus full testing.</li></ul><p>Total about 4 months, assuming no delays.</p><div class="gantt"><div></div><div class="h">Month 1</div><div class="h">Month 2</div><div class="h">Month 3</div><div class="h">Month 4</div><div>Phase 0</div><div class="b" style="grid-column:2/3">Shell</div><div>Phase 1</div><div class="b a" style="grid-column:2/3">Swap</div><div>Phase 2</div><div class="b" style="grid-column:3/4">Sensors</div><div>Phase 3</div><div class="b a" style="grid-column:4/5">Teleop</div><div>Phase 4</div><div class="b" style="grid-column:4/5">Autonomy</div><div>Phase 5+ / test</div><div class="b a" style="grid-column:5/6">Test</div></div></section>
+
+<section class="slide" data-t="Rough budget"><div class="tag">BUDGET ESTIMATE</div><h1>Rough cost breakdown (PKR)</h1>
+<table><tr><td>4 drive motors + wheels</td><td>2,300</td></tr><tr><td>5th motor + mechanism motors</td><td>1,200</td></tr>
+<tr><td>Bearings and bushings</td><td>1,500</td></tr><tr><td>Batteries + protection boards</td><td>3,000</td></tr>
+<tr><td>Charging station</td><td>1,500</td></tr><tr><td>Drivers, regulator, diodes</td><td>2,000</td></tr>
+<tr><td>ESP32 + cameras</td><td>3,500</td></tr><tr><td>Sensors</td><td>2,500</td></tr>
+<tr><td>Chassis, gears, printing, fasteners</td><td>4,000</td></tr><tr><td>Wiring and misc</td><td>1,500</td></tr>
+<tr><td>Contingency</td><td>2,000</td></tr><tr class="t"><td>Total</td><td>25,000</td></tr></table>
+<p>Estimates from local listings and our design calculations; final figures will change as parts are bought.</p></section>
+
+<section class="slide" data-t="Feasibility and resources"><div class="tag">FEASIBILITY</div><h1>Can we do it with what we have?</h1><ul><li><b>Workshop / lab:</b> department workshop.</li><li><b>Machines:</b> 3D printer and basic hand tools.</li><li><b>Software:</b> Onshape (CAD), Arduino IDE.</li><li><b>Materials:</b> motors, cells, drivers and sensors from local suppliers and Daraz.</li><li><b>Faculty support:</b> guidance and technical support from the department.</li><li><b>Time:</b> about 4 months in staged phases, so each phase is a working milestone.</li></ul></section>
+
+<section class="slide" data-t="Expected results and deliverables"><div class="tag">EXPECTED RESULTS</div><h1>What will exist at the end</h1><ul><li>A working rover prototype with a battery swap (Phase 1 at minimum).</li><li>CAD model and technical drawings.</li><li>Sensor data and test results; cost analysis.</li><li><b>Targets:</b> swap ≤ 20 s, runtime ≥ 1 h per cartridge, total cost about PKR 25,000 ± 3,000.</li><li>Teleoperation and, if time allows, autonomous docking.</li></ul></section>
+
+<section class="slide" data-t="Questions 1: concept"><div class="tag">POSSIBLE QUESTIONS 1/3</div><h1>Concept and design</h1>
+<div class="qa"><div class="q">Why swap instead of fitting a bigger battery?</div><div class="a">Runtime versus downtime and weight; smaller packs are easier to protect, and it demonstrates swap technology.</div></div>
+<div class="qa"><div class="q">Isn't sharing motors just extra complexity?</div><div class="a">It saves cost but concentrates risk. We compared both and chose it knowingly; the design is staged so the swap is proven first.</div></div>
+<div class="qa"><div class="q">How does the swap actually work?</div><div class="a">Mostly an electrical handover between two cartridges, plus one shaft that shifts slightly sideways to select between two gear outputs.</div></div>
+<div class="qa"><div class="q">Why sliding motors instead of lifting?</div><div class="a">A small sideways slide gives repeatable gear disengagement and lets a spring apply the brake at the same time.</div></div>
+<div class="qa"><div class="q">Why 4WD skid-steer?</div><div class="a">No steering linkage, cheaper; track and wheelbase were tuned to reduce turning scrub.</div></div>
+<div class="qa"><div class="q">Why plastic gears?</div><div class="a">Demo duty cycle is tiny compared to rated life; torque is set by ratio, not material.</div></div></section>
+
+<section class="slide" data-t="Questions 2: power and safety"><div class="tag">POSSIBLE QUESTIONS 2/3</div><h1>Power, safety and reliability</h1>
+<div class="qa"><div class="q">What if the swap jams mid-cycle?</div><div class="a">Detents, self-locking worm gear and diode-OR limit the damage; the shared mechanism is our highest-risk part and we say so.</div></div>
+<div class="qa"><div class="q">How do you protect the lithium cells?</div><div class="a">A CC-CV charge module for normal charging, plus a protection board in each cartridge as backup.</div></div>
+<div class="qa"><div class="q">What happens if contacts touch at the wrong time?</div><div class="a">Contacts are spaced so only one or two lines connect at once; diodes block backflow between packs.</div></div>
+<div class="qa"><div class="q">Why doesn't the ESP32 reset during the swap?</div><div class="a">The ESP32 is the rover's "brain": a tiny, cheap Wi-Fi-enabled computer chip that reads sensors and controls the motors. It runs from a buck converter, which absorbs the rail's dips and jumps.</div></div>
+<div class="qa"><div class="q">How do you know when to swap?</div><div class="a">State of charge estimated from voltage, current and temperature together.</div></div>
+<div class="qa"><div class="q">What if the batteries wear out?</div><div class="a">Li-ion lasts hundreds of cycles, far beyond demo use; cartridges are replaceable by design.</div></div></section>
+
+<section class="slide" data-t="Questions 3: practical"><div class="tag">POSSIBLE QUESTIONS 3/3</div><h1>Practicality, cost and future</h1>
+<div class="qa"><div class="q">What is the biggest technical risk?</div><div class="a">Docking alignment and torque sizing under real load.</div></div>
+<div class="qa"><div class="q">How does this compare to NIO or Zyp?</div><div class="a">Same principle at a much smaller scale and budget; we test the mechanism idea, not their business scale.</div></div>
+<div class="qa"><div class="q">Is this commercially viable?</div><div class="a">As a rover, it is a proof of concept. The value is in the mechanism and the battery-as-a-service model.</div></div>
+<div class="qa"><div class="q">What if you go over budget?</div><div class="a">The phases are cut points: swap first, sensors next, and autonomy only if funds remain.</div></div>
+<div class="qa"><div class="q">What will you show if autonomy isn't ready?</div><div class="a">A teleoperated demo with a manual swap trigger still proves the core idea.</div></div>
+<div class="qa"><div class="q">What did you learn or change during design?</div><div class="a">Motor sizing, the diode handover and the passive station all changed after calculation.</div></div></section>
+
+<section class="slide" data-t="References and questions"><div class="tag">REFERENCES</div><h1>References and questions</h1><ul style="font-size:13.5px"><li>Arab News, "Pakistani electric mobility provider raises $1.2 million, launches indigenously developed electric bikes," arabnews.com/node/2372361.</li><li>Arab News, "Leading Middle East fund announces $1.5 mln investment in Pakistani electric mobility provider," arabnews.com/node/2557036.</li><li>LUMS, "LUMS Spin-off, Neubolt Energy Services &amp; Euro Oil Collaborate for Battery-Swapping Station for Rikshaws," lums.edu.pk/node/14808.</li><li>Mitigation Action Facility, "Pakistan: Swappable Battery Based Network for Promoting Electric Vehicles," mitigation-action.org.</li><li>NIO Inc., Power Swap Station information, official website.</li><li>Espressif Systems, ESP32 Series Datasheet.</li><li>Toshiba, TB6612FNG Motor Driver Datasheet.</li></ul></section>
+
+<section class="slide stand" data-t="Further questions and discussion"><div class="big2" style="font-size:clamp(24px,4.4vw,48px)">Further Questions and Discussion</div><div class="qr">QR code here</div></section>
+
+</div>
+<div class="nav" id="nav"><button class="ar" id="pv" aria-label="Previous">&#8592;</button><span id="dots" style="display:contents"></span><button class="ar" id="nx" aria-label="Next">&#8594;</button></div>
+<script>
+(function(){
+var S=[].slice.call(document.querySelectorAll('.slide')),D=document.getElementById('dots'),i=0,toc=document.getElementById('toc'),dots=[];
+S.forEach(function(s,k){
+ var f=document.createElement('div');f.className='ft';f.innerHTML=(s.dataset.t==='Contents'?'<span></span>':'<button type="button" data-c="1">&#9776; Contents</button>')+'<span>MODULAR SMART ELECTRIC ROVER</span><span>'+String(k).padStart(2,'0')+' / '+String(S.length-1).padStart(2,'0')+'</span>';if(k)s.appendChild(f);
+ var d=document.createElement('button');d.className='dot';d.setAttribute('aria-label','Slide '+(k+1));d.onclick=function(){go(k)};D.appendChild(d);dots.push(d);
+ if(k&&s.dataset.t!=='Contents'){var l=document.createElement('li');l.innerHTML='<span>'+String(k).padStart(2,'0')+'</span>'+s.dataset.t;l.onclick=function(){go(k)};toc.appendChild(l)}
+});
+function go(n){n=(n+S.length)%S.length;S[i].classList.remove('active');dots[i].classList.remove('on');i=n;S[i].classList.add('active');dots[i].classList.add('on');
+ [].forEach.call(S[i].children,function(c,k){c.style.animationDelay=(k*.08)+'s'});S[i].scrollTop=0}
+var ci=S.findIndex(function(x){return x.dataset.t==='Contents'});[].forEach.call(document.querySelectorAll('[data-c]'),function(b){b.onclick=function(){go(ci)}});
+dots[0].classList.add('on');
+document.getElementById('nx').onclick=function(){go(i+1)};document.getElementById('pv').onclick=function(){go(i-1)};
+document.addEventListener('keydown',function(e){if(e.key==='ArrowRight')go(i+1);if(e.key==='ArrowLeft')go(i-1)});
+})();
+</script></body></html>

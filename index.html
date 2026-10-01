@@ -108,7 +108,7 @@ tr.t td{font-weight:700;color:var(--tx)}tr.t td+td{color:var(--tl)}
 <div class="c"><h3>Clamp</h3><p>Worm-gear reduction: self-locking, holds the cartridge with zero standing current.</p></div>
 <div class="c"><h3>Carousel</h3><p>Two positions only (left / right), spring detents, microswitch confirms seating.</p></div>
 <div class="c"><h3>Insertion + station turn</h3><p>Screw-push plus cam-drop; external gear turns the station carousel.</p></div>
-<div class="c"><h3>Camera rotation (9th job)</h3><p>The same shared drive rotates the camera to look where the rover needs to see.</p></div></div></section>
+<div class="c"><h3>Camera/sensor/antena rotation (9th job)</h3><p>The same shared drive rotates either the camera or surrounding sensors/antenas, to be tested and whichever is best will be used.</p></div></div></section>
 
 <section class="slide" data-t="Working principle and methodology"><div class="tag">WORKING PRINCIPLE</div><h1>Input → Process → Output</h1><div class="flow"><div class="c"><h3>Input</h3><p>Battery low (voltage, current, temperature) or manual trigger</p></div><div class="ar2">→</div><div class="c"><h3>Dock</h3><p>Rover drives to the station; funnel and bump align it</p></div><div class="ar2">→</div><div class="c"><h3>Disengage</h3><p>5th motor slides drive motors back; springs brake wheels</p></div><div class="ar2">→</div><div class="c"><h3>Swap</h3><p>Clamp, carousel and insertion exchange the cartridge</p></div><div class="ar2">→</div><div class="c"><h3>Output</h3><p>Fresh battery live; rover resumes driving</p></div></div><h2>Development stages</h2><ul><li>CAD in Onshape, then 3D-printing and assembly, then Arduino/ESP32 control, then testing.</li></ul></section>
 
